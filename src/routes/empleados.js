@@ -1,6 +1,14 @@
 const { Router } = require('express');
-const create_empleado = require('../controllers/empleados.controller');
+const getEmpleados = require('../controllers/empleados.controller');
+const crear_empleado = require('../controllers/empleados.controller');
+const crear_contrato = require('../controllers/empleados.controller');
+const asignar_empleado = require('../controllers/empleados.controller');
 const router = Router();
 
-router.post('/create_empleado',create_empleado);
+router.get('/',getEmpleados);
+
+router.post('/crear_empleado',crear_empleado);
+router.post('/crear_contrato',crear_contrato);
+router.post('/asignar_empleado',asignar_empleado);
+
 module.exports = router; 

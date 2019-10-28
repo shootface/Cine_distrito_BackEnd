@@ -1,7 +1,13 @@
-const qe = require('querystring');
-const {persona, cliente} = require('../models/persona');
-const {empleado, contrato, empleadoMultiplex} = require('../models/empleado');
+//const qe = require('querystring');
+const persona = require('../models/persona');
+const { empleado, contrato, empleadoMultiplex } = require('../models/empleado');
 
+async function getEmpleados(req,res){
+    const personas = await persona.findAll();
+    res.json({
+        data: personas
+    });
+};
 async function crear_empleado(req,res){
     const {
         pk_cedula,
@@ -15,37 +21,45 @@ async function crear_empleado(req,res){
         n_descuento,
         fk_numcontrato
         } = req.body;
-    try {
-        let newp = await persona.create({
-            pk_cedula,
-            v_primernombre,
-            v_segundonombre,
-            v_primerapellido,
-            v_segundoapellido,
-            i_telefono,
-            v_direccion,
-            pass
-        });
-        if (newp){
-            let newEm = await empleado.create({
+        try {
+            let newp = await persona.create({
                 pk_cedula,
-                n_descuento,
-                fk_numcontrato
+                v_primernombre,
+                v_segundonombre,
+                v_primerapellido,
+                v_segundoapellido,
+                i_telefono,
+                v_direccion,
+                pass
             });
-            if (newEm){
-                return res.json({
-                    message:'Empleado created successfully',
-                    data: newEm
-                });
+            if (newp){
+                try {
+                    let newEm = await empleado.create({
+                        pk_cedula,
+                        n_descuento,
+                        fk_numcontrato
+                    });
+                    if (newEm){
+                        return res.json({
+                            message:'Empleado created successfully',
+                            data: newEm
+                        });
+                    }
+                } catch (error) {
+                    console.log(error);
+                    res.status(500).json({
+                        message: 'Something goes wrong',
+                        data: error
+                    });
+                }
             }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                message: 'Something goes wrong',
+                data: error
+            });
         }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Something goes wrong',
-            data: error
-        });
-    };
 };
 async function crear_contrato(req,res){
     const {
@@ -73,7 +87,7 @@ async function crear_contrato(req,res){
             data: error
         });
     };
-}
+};
 async function asignar_empleado(req,res){
     const {
         id,
@@ -100,9 +114,6 @@ async function asignar_empleado(req,res){
             data: error
         });
     }
-}
-async function loggin(req,res){
-    //const {
-    //}
-}
-module.exports= crear_empleado, crear_contrato, asignar_empleado;
+};
+module.exports = getEmpleados,crear_empleado,crear_contrato,asignar_empleado;
+//module.exports = crear_empleado,crear_contrato,getEmpleados,asignar_empleado;
