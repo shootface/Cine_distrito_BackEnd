@@ -1,6 +1,4 @@
-//const config = require('../config');
 const sq = require('sequelize');
-//const { Pool, Client } = require('pg');
 const poo = new sq(
         'dgrs5s3ml954l',
         'vislvvzieyztkh',
@@ -8,22 +6,20 @@ const poo = new sq(
         {
             host: 'ec2-54-243-238-226.compute-1.amazonaws.com',
             dialect: 'postgres',
+            dialectOptions: {
+                ssl: true
+            },
             pool:{
                 max:5,
                 min:0,
                 require: 30000,
                 idle: 10000
             },
-            logging: false
-        }
-    )
+            logging: false,
+        },
+    );
 //const pool = new Pool({
 //    connectionString: process.env.DATABASE_URL || config.db,
  //   ssl: true
 //});
-//const pool2 = new Pool({
-//    connectionString: config.dbdavid,
-//    ssl:true
-//});
-
 module.exports = poo;

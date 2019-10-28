@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
     next();
 });
 // routes
-app.use('api/empleados',require('./routes/empleados'));
 app.use(require('./routes/index'));
+app.use(require('./routes/empleados'));
 
 module.exports = app;
