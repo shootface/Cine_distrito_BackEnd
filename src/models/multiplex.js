@@ -4,7 +4,8 @@ const poo = require('../database');
 const multiplex = poo.define('multiplex',{
     id:{
         type: sq.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },v_nombre:{
         type: sq.STRING(100),
         primaryKey: true
@@ -31,7 +32,8 @@ const multiplex = poo.define('multiplex',{
 const sala = poo.define('sala',{
     id:{
         type: sq.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     i_numsala:{
         type: sq.INTEGER
@@ -59,7 +61,8 @@ const sala = poo.define('sala',{
 const silla = poo.define('silla',{
     id:{
         type: sq.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     pk_numero:{
         type: sq.STRING(3)

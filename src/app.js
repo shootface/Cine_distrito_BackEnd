@@ -16,5 +16,7 @@ app.use(function(req, res, next) {
 // routes
 app.use(require('./routes/index'));
 app.use('/empleado',require('./routes/empleados'));
+app.use('/contratos',require('./routes/contratos'));
+app.use('/empleMulti',require('./routes/empleMulti'));
 
 module.exports = app;

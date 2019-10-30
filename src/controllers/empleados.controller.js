@@ -18,37 +18,17 @@ async function getEmpleados(req,res){
         });
     }
 };
-async function getContratos(req,res){
-    try {
-        const contratos = await Empleado.contrato.findAll();
-        res.json({
-            data: contratos
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Something goes wrong in getContratos',
-            data: error
-        });
-    }
-};
-async function getEmpleadosMultiplex(req,res){
-    try {
-        const empleMulti = await Empleado.empleadoMultiplex.findAll();
-        res.json({
-            data: empleMulti
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Something goes wrong in getEmpleadosMultiplex',
-            data: error
-        });
-    }
-}
 async function getOneEmpleado(req,res){
+    const { fk_persona } = req.params;
     try {
-        
+        const em = await Empleado.empleado.findOne({
+            where: {
+                fk_persona
+            }
+        });
+        res.json({
+            data: em
+        })
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -103,66 +83,9 @@ function crear_empleado(req,res){
         });
     });
 };
-async function crear_contrato(req,res){
-    const {
-        id,
-        v_tipocontrato,
-        d_iniciocontrato,
-        i_salario
-    } = req.body;
-    try {
-        let newCli = await Empleado.contrato.create({
-            v_tipocontrato,
-            d_iniciocontrato,
-            i_salario
-        });
-        if (newCli){
-            return res.json({
-                message:'Contrato created successfully',
-                data: newCli
-            });
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Something goes wrong in crear_contrato',
-            data: error
-        });
-    };
-};
-async function asignar_empleado(req,res){
-    const {
-        fk_persona,
-        fk_multiplex,
-        f_transferencia
-    } = req.body;
-    try {
-        let newEM = await Empleado.empleadoMultiplex.create({
-            fk_persona,
-            fk_multiplex,
-            f_transferencia
-        });
-        if(newEM){
-            return res.json({
-                message:'Empleado asignado successfully',
-                data: newEM
-            });
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Something goes wrong',
-            data: error
-        });
-    }
-};
 //----------------------------------------------------------------
 //GET
 module.exports.getEmpleados = getEmpleados;
-module.exports.getContratos = getContratos;
-module.exports.getEmpleadosMultiplex = getEmpleadosMultiplex;
 module.exports.getOneEmpleado = getOneEmpleado;
 //POST
 module.exports.crear_empleado = crear_empleado;
-module.exports.crear_contrato = crear_contrato;
-module.exports.asignar_empleado = asignar_empleado;
