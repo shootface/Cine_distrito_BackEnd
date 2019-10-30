@@ -1,7 +1,7 @@
 const sq = require('sequelize');
-const empleadaMultiplex = require('./empleado');
+const poo = require('../database');
 
-const multiplex = sq.define('multiplex',{
+const multiplex = poo.define('multiplex',{
     id:{
         type: sq.INTEGER,
         primaryKey: true
@@ -24,10 +24,11 @@ const multiplex = sq.define('multiplex',{
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'multiplex'
+    tableName: 'multiplex',
+    modelName: 'multiplex'
 });
 
-const sala = sq.define('sala',{
+const sala = poo.define('sala',{
     id:{
         type: sq.INTEGER,
         primaryKey: true
@@ -42,15 +43,20 @@ const sala = sq.define('sala',{
         type: sq.INTEGER
     },
     fk_multiplex:{
-        type: sq.INTEGER
+        type: sq.INTEGER,
+        references:{
+            model: multiplex,
+            key: 'id'
+        }
     }
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'sala'
+    tableName: 'sala',
+    modelName: 'sala'
 });
 
-const silla = sq.define('silla',{
+const silla = poo.define('silla',{
     id:{
         type: sq.INTEGER,
         primaryKey: true
@@ -66,18 +72,19 @@ const silla = sq.define('silla',{
         type: sq.STRING(50)
     },
     fk_sala:{
-        type: sq.INTEGER
+        type: sq.INTEGER,
+        references:{
+            model: sala,
+            key: 'id'
+        }
     }
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'silla'
+    tableName: 'silla',
+    modelName: 'silla'
 });
-//Relaciones
-empleadaMultiplex.belongsTo(multiplex,{foreingKey:'fk_persona', sourceKey:'fk_persona',onDelete: 'CASCADE'});
-multiplex.hasMany(sala,{foreingKey:'fk_multiplex',sourceKey:'id',onDelete:'CASCADE'});
-sala.belongsTo(multiplex,{foreingKey:'fk_multiplex',sourceKey:'id',onDelete:'CASCADE'});
-sala.hasMany(silla,{foreingKey:'fk_sala',sourceKey:'id',onDelete:'CASCADE'});
-silla.belongsTo(sale,{foreingKey:'fk_sala',sourceKey:'id',onDelete:'CASCADE'});
 
-module.exports = multiplex,sala,silla;
+module.exports.multiplex = multiplex
+module.exports.sala = sala;
+module.exports.silla = silla;

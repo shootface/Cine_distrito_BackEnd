@@ -15,6 +15,6 @@ app.use(function(req, res, next) {
 });
 // routes
 app.use(require('./routes/index'));
-app.use(require('./routes/empleados'));
+app.use('/empleado',require('./routes/empleados'));
 
 module.exports = app;

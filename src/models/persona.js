@@ -31,14 +31,19 @@ const persona = poo.define('persona',{
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'persona'
+    tableName: 'persona',
+    modelName: 'persona'
 }
 );
 
 const cliente = poo.define('cliente',{
     fk_persona:{
         type: sq.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        references:{
+            model: persona,
+            key:'pk_cedula'
+        }
     },
     i_numpuntos:{
         type: sq.INTEGER
@@ -52,13 +57,15 @@ const cliente = poo.define('cliente',{
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'cliente'
+    tableName: 'cliente',
+    modelName: 'cliente'
 }); 
 
 //Relaciones
-persona.hasMany(cliente,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
-persona.hasMany(empleado,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
-empleado.belongsTo(persona,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
-cliente.belongsTo(persona,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
+//persona.hasMany(cliente,{foreingKey:'fk_persona',onDelete: 'CASCADE'});
+//persona.hasMany(empleado,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
+//empleado.belongsTo(persona,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
+//cliente.belongsTo(persona,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
 
-module.exports = persona,cliente;
+module.exports.persona = persona;
+module.exports.cliente = cliente;

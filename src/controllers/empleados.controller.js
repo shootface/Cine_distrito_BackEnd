@@ -1,28 +1,79 @@
 //const qe = require('querystring');
-const persona = require('../models/persona');
-const { empleado, contrato, empleadoMultiplex } = require('../models/empleado');
-
+const sq = require('sequelize');
+const poo = require('../database');
+const Persona = require('../models/persona');
+const Empleado = require('../models/empleado');
+//GET------------------------------------------------------------
 async function getEmpleados(req,res){
-    const personas = await persona.findAll();
-    res.json({
-        data: personas
-    });
+    try {
+        const empleados = await Empleado.empleado.findAll();
+        res.json({
+            data: empleados
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in getEmpleados',
+            data: error
+        });
+    }
 };
-async function crear_empleado(req,res){
-    const {
-        pk_cedula,
-        v_primernombre,
-        v_segundonombre,
-        v_primerapellido,
-        v_segundoapellido,
-        i_telefono,
-        v_direccion,
-        pass,
-        n_descuento,
-        fk_numcontrato
-        } = req.body;
-        try {
-            let newp = await persona.create({
+async function getContratos(req,res){
+    try {
+        const contratos = await Empleado.contrato.findAll();
+        res.json({
+            data: contratos
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in getContratos',
+            data: error
+        });
+    }
+};
+async function getEmpleadosMultiplex(req,res){
+    try {
+        const empleMulti = await Empleado.empleadoMultiplex.findAll();
+        res.json({
+            data: empleMulti
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in getEmpleadosMultiplex',
+            data: error
+        });
+    }
+}
+async function getOneEmpleado(req,res){
+    try {
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in getOneEmpleado',
+            data: error
+        });
+    }
+};
+//----------------------------------------------------------------
+//POST------------------------------------------------------------
+function crear_empleado(req,res){
+    const e = poo.transaction( t =>{
+        const {
+            pk_cedula,
+            v_primernombre,
+            v_segundonombre,
+            v_primerapellido,
+            v_segundoapellido,
+            i_telefono,
+            v_direccion,
+            pass,
+            n_descuento,
+            fk_numcontrato
+            } = req.body;
+            return newEp = Persona.persona.create({
                 pk_cedula,
                 v_primernombre,
                 v_segundonombre,
@@ -31,35 +82,26 @@ async function crear_empleado(req,res){
                 i_telefono,
                 v_direccion,
                 pass
+            },{transaction: t}).then(newEp => {
+                return newEm = Empleado.empleado.create({
+                    fk_persona:newEp.pk_cedula,
+                    n_descuento,
+                    fk_numcontrato
+                },{transaction: t})
             });
-            if (newp){
-                try {
-                    let newEm = await empleado.create({
-                        pk_cedula,
-                        n_descuento,
-                        fk_numcontrato
-                    });
-                    if (newEm){
-                        return res.json({
-                            message:'Empleado created successfully',
-                            data: newEm
-                        });
-                    }
-                } catch (error) {
-                    console.log(error);
-                    res.status(500).json({
-                        message: 'Something goes wrong',
-                        data: error
-                    });
-                }
-            }
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({
-                message: 'Something goes wrong',
-                data: error
-            });
-        }
+    }).then(result=>{
+        return res.json({
+            message:'Empleado created successfully',
+            body: result,
+            data: e
+        });
+    }).catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            message: 'Something goes wrong in crear_empleado',
+            data: err
+        });
+    });
 };
 async function crear_contrato(req,res){
     const {
@@ -69,7 +111,7 @@ async function crear_contrato(req,res){
         i_salario
     } = req.body;
     try {
-        let newCli = await contrato.create({
+        let newCli = await Empleado.contrato.create({
             v_tipocontrato,
             d_iniciocontrato,
             i_salario
@@ -83,20 +125,19 @@ async function crear_contrato(req,res){
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'Something goes wrong',
+            message: 'Something goes wrong in crear_contrato',
             data: error
         });
     };
 };
 async function asignar_empleado(req,res){
     const {
-        id,
         fk_persona,
         fk_multiplex,
         f_transferencia
     } = req.body;
     try {
-        let newEM = await empleadoMultiplex.create({
+        let newEM = await Empleado.empleadoMultiplex.create({
             fk_persona,
             fk_multiplex,
             f_transferencia
@@ -115,5 +156,13 @@ async function asignar_empleado(req,res){
         });
     }
 };
-module.exports = getEmpleados,crear_empleado,crear_contrato,asignar_empleado;
-//module.exports = crear_empleado,crear_contrato,getEmpleados,asignar_empleado;
+//----------------------------------------------------------------
+//GET
+module.exports.getEmpleados = getEmpleados;
+module.exports.getContratos = getContratos;
+module.exports.getEmpleadosMultiplex = getEmpleadosMultiplex;
+module.exports.getOneEmpleado = getOneEmpleado;
+//POST
+module.exports.crear_empleado = crear_empleado;
+module.exports.crear_contrato = crear_contrato;
+module.exports.asignar_empleado = asignar_empleado;

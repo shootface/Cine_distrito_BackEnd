@@ -1,24 +1,7 @@
 const sq = require('sequelize');
 const poo = require('../database');
-
-const empleado = poo.define('empleado',{
-    fk_persona:{
-        type: sq.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    n_descuento:{
-        type: sq.DOUBLE
-    },
-    fk_numcontrato:{
-        type: sq.INTEGER
-    }
-},{
-    timestamps: false,
-    freezeTableName: true,
-    tableName: 'empleado'
-}
-);
+const Persona = require('./persona');
+const Multiplex = require('./multiplex');
 
 const contrato = poo.define('contrato',{
     id:{
@@ -37,8 +20,36 @@ const contrato = poo.define('contrato',{
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'contrato'
+    tableName: 'contrato',
+    modelName: 'contrato'
 });
+
+const empleado = poo.define('empleado',{
+    fk_persona:{
+        type: sq.INTEGER,
+        primaryKey: true,
+        references:{
+            model: Persona.persona,
+            key:'pk_cedula'
+        }
+    },
+    n_descuento:{
+        type: sq.DOUBLE
+    },
+    fk_numcontrato:{
+        type: sq.INTEGER,
+        reference:{
+            model: contrato,
+            key:'id'
+        }
+    }
+},{
+    timestamps: false,
+    freezeTableName: true,
+    tableName: 'empleado',
+    modelName: 'empleado'
+}
+);
 
 const empleadoMultiplex = poo.define('empleado_multiplex',{
     id:{
@@ -46,11 +57,19 @@ const empleadoMultiplex = poo.define('empleado_multiplex',{
         primaryKey: true,
         autoIncrement: true
     },
-    fk_persona:{
-        type: sq.INTEGER
+    fk_empleado:{
+        type: sq.INTEGER,
+        references:{
+            model: empleado,
+            key:'pk_cedula'
+        }
     },
     fk_multiplex:{
-        type: sq.INTEGER
+        type: sq.INTEGER,
+        reference:{
+            model: Multiplex.multiplex,
+            key: 'id'
+        }
     },
     f_transferencia:{
         type: sq.DATE
@@ -58,13 +77,10 @@ const empleadoMultiplex = poo.define('empleado_multiplex',{
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'empleado_multiplex'
+    tableName: 'empleado_multiplex',
+    modelName: 'empleado_multiplex'
 });
-//Relaciones
-//empleado.belongsTo(persona,{foreingKey:'fk_persona', sourceKey:'pk_cedula'});
-empleado.belongsTo(empleadoMultiplex,{foreingKey:'fk_persona', sourceKey:'fk_persona'});
-empleado.belongsTo(contrato,{foreingKey:'fk_numcontrato',sourceKey:'id',onDelete: 'CASCADE'})
-contrato.hasMany(empleado,{foreingKey:'fk_numcontrato',sourceKey:'id',onDelete: 'CASCADE'});
-empleadoMultiplex.hasMany(empleado,{foreingKey:'fk_persona', sourceKey:'fk_persona'});
 
-module.exports = empleado,contrato,empleadoMultiplex;
+module.exports.empleado = empleado;
+module.exports.contrato = contrato;
+module.exports.empleadoMultiplex = empleadoMultiplex;
