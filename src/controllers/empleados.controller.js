@@ -1,6 +1,7 @@
 //const qe = require('querystring');
 const sq = require('sequelize');
 const poo = require('../database');
+const bs = require('bcryptjs');
 const Persona = require('../models/persona');
 const Empleado = require('../models/empleado');
 //GET------------------------------------------------------------
@@ -40,7 +41,7 @@ async function getOneEmpleado(req,res){
 //----------------------------------------------------------------
 //POST------------------------------------------------------------
 function crear_empleado(req,res){
-    const e = poo.transaction( t =>{
+    const e = poo.transaction( async(t) =>{
         const {
             pk_cedula,
             v_primernombre,
@@ -53,7 +54,10 @@ function crear_empleado(req,res){
             n_descuento,
             fk_numcontrato
             } = req.body;
-            return newEp = Persona.persona.create({
+            //Hash password
+            const salt = await bs.genSalt(10);
+            const hashPass = await bs.hash(pass,salt);
+            return newEp = await Persona.persona.create({
                 pk_cedula,
                 v_primernombre,
                 v_segundonombre,
@@ -61,9 +65,9 @@ function crear_empleado(req,res){
                 v_segundoapellido,
                 i_telefono,
                 v_direccion,
-                pass
-            },{transaction: t}).then(newEp => {
-                return newEm = Empleado.empleado.create({
+                pass : hashPass
+            },{transaction: t}).then(async(newEp) => {
+                return newEm = await Empleado.empleado.create({
                     fk_persona:newEp.pk_cedula,
                     n_descuento,
                     fk_numcontrato

@@ -46,6 +46,7 @@ async function crear_contrato(req,res){
     } = req.body;
     try {
         let newCli = await Empleado.contrato.create({
+            id,
             v_tipocontrato,
             d_iniciocontrato,
             i_salario
@@ -65,6 +66,53 @@ async function crear_contrato(req,res){
     };
 };
 //---------------------------------------------------------------
+//DELETE---------------------------------------------------------
+async function borrar_contrato(req,res){
+    const {
+        id
+    } = req.params;
+    try {
+        await Empleado.contrato.destroy({
+            where:{
+                id
+            }
+        });
+        res.json({
+            message: 'Contrato deleted successfully'
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in borrar_contrato',
+            data: error
+        });
+    }
+}
+//---------------------------------------------------------------
+//UPDATE---------------------------------------------------------
+async function actualizar_contrato(req,res){
+    const {
+        id
+    } = req.params;
+    const {
+        id,
+        v_tipocontrato,
+        d_iniciocontrato,
+        i_salario
+    } = req.body;
+    try {
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in actualizar_contrato',
+            data: error
+        });
+    }
+}
+//---------------------------------------------------------------
 module.exports.getContratos = getContratos;
 module.exports.getOneContrato = getOneContrato;
 module.exports.crear_contrato = crear_contrato;
+module.exports.borrar_contrato = borrar_contrato;
+module.exports.actualizar_contrato = actualizar_contrato;

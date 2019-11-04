@@ -26,13 +26,13 @@ const persona = poo.define('persona',{
         type: sq.STRING(100)
     },
     pass:{
-        type: sq.STRING(128)
+        type: sq.STRING(128),
+        allowNull: false
     }
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'persona',
-    modelName: 'persona'
+    tableName: 'persona'
 }
 );
 
@@ -57,15 +57,8 @@ const cliente = poo.define('cliente',{
 },{
     timestamps: false,
     freezeTableName: true,
-    tableName: 'cliente',
-    modelName: 'cliente'
+    tableName: 'cliente'
 }); 
-
-//Relaciones
-//persona.hasMany(cliente,{foreingKey:'fk_persona',onDelete: 'CASCADE'});
-//persona.hasMany(empleado,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
-//empleado.belongsTo(persona,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
-//cliente.belongsTo(persona,{foreingKey:'fk_persona', sourceKey:'pk_cedula',onDelete: 'CASCADE'});
 
 module.exports.persona = persona;
 module.exports.cliente = cliente;
