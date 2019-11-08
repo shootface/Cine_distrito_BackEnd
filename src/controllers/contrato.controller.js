@@ -95,13 +95,25 @@ async function actualizar_contrato(req,res){
         id
     } = req.params;
     const {
-        id,
         v_tipocontrato,
         d_iniciocontrato,
         i_salario
     } = req.body;
     try {
-        
+        const contrato = await Empleado.contrato.findOne({
+            where:{
+                id
+            }
+        });
+        const updateC = await contrato.update({
+            v_tipocontrato,
+            d_iniciocontrato,
+            i_salario
+        })
+        res.json({
+            message: "Contrato Updated Successfully",
+            data: updateC
+        })
     } catch (error) {
         console.log(error);
         res.status(500).json({

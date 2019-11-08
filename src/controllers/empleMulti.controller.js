@@ -38,7 +38,7 @@ async function asignar_empleado(req,res){
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'Something goes wrong',
+            message: 'Something goes wrong asignar_empleado',
             data: error
         });
     }

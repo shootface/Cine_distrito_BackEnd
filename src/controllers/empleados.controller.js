@@ -87,7 +87,27 @@ function crear_empleado(req,res){
         });
     });
 };
-//----------------------------------------------------------------
+//---------------------------------------------------------------
+//UPDATE---------------------------------------------------------
+async function actualizar_empleado(req,res){
+    const {
+        fk_persona
+    } = req.params;
+    const {
+        n_descuento,
+        fk_numcontrato
+    } = req.body;
+    try {
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in actualizar_empleado',
+            data: error
+        });
+    }
+}
+//---------------------------------------------------------------
 //GET
 module.exports.getEmpleados = getEmpleados;
 module.exports.getOneEmpleado = getOneEmpleado;

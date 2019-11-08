@@ -7,6 +7,7 @@ app.set('port', process.env.PORT || 3000);
 //middlewares
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(express.static('images'));
 app.use(express.urlencoded({extended: false}));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -20,5 +21,8 @@ app.use('/contratos',require('./routes/contratos'));
 app.use('/empleMulti',require('./routes/empleMulti'));
 app.use('/personas',require('./routes/personas'));
 app.use('/login',require('./routes/login'));
+app.use('/funciones',require('./routes/funciones'));
+app.use('/peliculas',require('./routes/peliculas'));
+app.use('/salas',require('./routes/salas'));
 
 module.exports = app;

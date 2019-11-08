@@ -2,6 +2,30 @@ const sq = require('sequelize');
 const poo = require('../database');
 const Multiplex = require('./multiplex');
 
+const pelicula = poo.define('pelicula',{
+    id:{
+        type: sq.INTEGER,
+        primaryKey:true,
+        autoIncrement: true
+    },
+    v_nombre: {
+        type: sq.STRING(150)
+    },
+    i_duracion: {
+        type: sq.INTEGER
+    },
+    tx_sinapsis: {
+        type: sq.TEXT
+    },
+    v_foto: {
+        type: sq.STRING(100)
+    }
+},{
+    timestamps: false,
+    freezeTableName: true,
+    tableName: 'pelicula'
+});
+
 const funcion = poo.define('funcion',{
     id:{
         type: sq.INTEGER,
@@ -32,30 +56,6 @@ const funcion = poo.define('funcion',{
     timestamps: false,
     freezeTableName: true,
     tableName: 'funcion'
-});
-
-const pelicula = poo.define('pelicula',{
-    id:{
-        type: sq.INTEGER,
-        primaryKey:true,
-        autoIncrement: true
-    },
-    v_nombre: {
-        type: sq.STRING(150)
-    },
-    i_duracion: {
-        type: sq.INTEGER
-    },
-    tx_sinapsis: {
-        type: sq.TEXT
-    },
-    b_foto: {
-        type: sq.BLOB
-    }
-},{
-    timestamps: false,
-    freezeTableName: true,
-    tableName: 'pelicula'
 });
 
 const funcionSala = poo.define('funcion_sala',{
