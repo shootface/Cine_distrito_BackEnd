@@ -239,7 +239,8 @@ CREATE TABLE Snack
 	v_nombre varchar(50) NOT NULL,
 	tx_descripcion text NOT NULL,
 	i_precio integer NOT NULL,
-	i_puntosOfrecidos integer NULL
+	i_puntosOfrecidos integer NULL,
+	i_cantidad integer NOT NULL
 )
 ;
 

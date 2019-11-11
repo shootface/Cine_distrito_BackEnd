@@ -21,6 +21,9 @@ const snack = poo.define('snack',{
     },
     i_puntosofrecidos: {
         type: sq.INTEGER
+    },
+    i_cantidad: {
+        type: sq.INTEGER
     }
 },{
     timestamps: false,
