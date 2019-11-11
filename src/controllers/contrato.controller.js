@@ -3,6 +3,7 @@ const poo = require('../database');
 const Empleado = require('../models/empleado');
 //GET------------------------------------------------------------
 async function getContratos(req,res){
+    console.log(req.pk_cedula);
     try {
         const contratos = await Empleado.contrato.findAll();
         res.json({

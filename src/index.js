@@ -5,6 +5,7 @@ const config = require('./config');
 async function main(){
     await app.listen(config.port, () => {
         console.log('server on port ',app.get('port'));
+        console.log( new Date() );
     })
 };
 

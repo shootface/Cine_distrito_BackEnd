@@ -2,10 +2,10 @@ const Multiplex = require('../models/multiplex');
 
 async function getSalas(req,res){
     try {
-        const salas = await Multiplex.sala.findAll()
+        const salas = await Multiplex.sala.findAll();
         res.json({
             data:salas
-        })
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -29,7 +29,7 @@ async function getOneSala(req,res){
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'Something goes wrong in getSalas',
+            message: 'Something goes wrong in getOneSala',
             data: error
         });
     }

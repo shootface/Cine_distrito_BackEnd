@@ -24,5 +24,7 @@ app.use('/login',require('./routes/login'));
 app.use('/funciones',require('./routes/funciones'));
 app.use('/peliculas',require('./routes/peliculas'));
 app.use('/salas',require('./routes/salas'));
+app.use('/reserva',require('./routes/reserva'));
+app.use('/funcionesSala',require('./routes/funcion_sala'));
 
 module.exports = app;

@@ -1,7 +1,7 @@
 const sq = require('sequelize');
 const poo = require('../database');
 
-const snack = require('snack',{
+const snack = poo.define('snack',{
     id: {
         type: sq.INTEGER,
         primaryKey: true,

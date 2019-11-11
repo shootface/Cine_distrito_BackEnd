@@ -79,6 +79,7 @@ async function borrar_Funsala(req,res){
         });
     }
 };
+
 module.exports.getFuncionSala = getFuncionSala;
 module.exports.getOneFuncionSala = getOneFuncionSala;
 module.exports.crear_funcionSala = crear_funcionSala;

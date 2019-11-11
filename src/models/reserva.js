@@ -5,7 +5,7 @@ const Multiplex = require('./multiplex');
 const Funciones = require('./funciones');
 const Snack = require('./snack');
 
-const reserva = require('reserva', {
+const reserva = poo.define('reserva', {
     id: {
         type: sq.INTEGER,
         primaryKey: true,
@@ -13,6 +13,7 @@ const reserva = require('reserva', {
     },
     v_estado: {
         type: sq.STRING(50),
+        values: ['En proceso','cancelada','Cancelada','en proceso']
     },
     t_inicioreserva: {
         type: sq.DATE
@@ -30,7 +31,7 @@ const reserva = require('reserva', {
     tableName: 'reserva'
 });
 
-const sillaReservada = require('silla_reservada',{
+const sillaReservada = poo.define('silla_reservada',{
     id: {
         type: sq.INTEGER,
         primaryKey: true,
@@ -38,7 +39,7 @@ const sillaReservada = require('silla_reservada',{
     },
     v_estado: {
         type: sq.STRING(50),
-        values: ['proceso','En proceso','reservada', 'Reservada']
+        values: ['enproceso','En proceso','reservada', 'Reservada']
     },
     fk_silla: {
         type: sq.INTEGER,
@@ -67,7 +68,7 @@ const sillaReservada = require('silla_reservada',{
     tableName: 'silla_reservada'
 });
 
-const snackReservada = require('snack_reserva',{
+const snackReservada = poo.define('snack_reserva',{
     fk_reserva: {
         type: sq.INTEGER,
         reference: {
