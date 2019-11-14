@@ -58,6 +58,8 @@ const sala = poo.define('sala',{
     modelName: 'sala'
 });
 
+multiplex.hasMany(sala,{foreignKey:'fk_multiplex',sourceKey:'id'});
+
 const silla = poo.define('silla',{
     id:{
         type: sq.INTEGER,
@@ -87,6 +89,8 @@ const silla = poo.define('silla',{
     tableName: 'silla',
     modelName: 'silla'
 });
+
+sala.hasMany(silla,{foreignKey:'fk_sala',sourceKey:'id'})
 
 module.exports.multiplex = multiplex
 module.exports.sala = sala;

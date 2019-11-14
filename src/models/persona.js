@@ -1,6 +1,6 @@
 const sq = require('sequelize');
 const poo = require('../database');
-const empleado = require('./empleado');
+const Empleado = require('./empleado');
 
 const persona = poo.define('persona',{
     pk_cedula:{
@@ -36,6 +36,8 @@ const persona = poo.define('persona',{
 }
 );
 
+//persona.hasMany(Empleado.empleado,{foreignKey:'fk_persona',sourceKey:'pk_cedula'})
+
 const cliente = poo.define('cliente',{
     fk_persona:{
         type: sq.INTEGER,
@@ -58,7 +60,9 @@ const cliente = poo.define('cliente',{
     timestamps: false,
     freezeTableName: true,
     tableName: 'cliente'
-}); 
+});
+
+//persona.hasMany(cliente,{foreignKey:'fk_persona',sourceKey:'pk_cedula'});
 
 module.exports.persona = persona;
 module.exports.cliente = cliente;

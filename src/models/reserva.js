@@ -31,6 +31,8 @@ const reserva = poo.define('reserva', {
     tableName: 'reserva'
 });
 
+//Persona.persona.hasMany(reserva,{});
+
 const sillaReservada = poo.define('silla_reservada',{
     id: {
         type: sq.INTEGER,
@@ -68,6 +70,10 @@ const sillaReservada = poo.define('silla_reservada',{
     tableName: 'silla_reservada'
 });
 
+//sillaReservada.hasMany(Multiplex.silla);
+//sillaReservada.hasMany(Funciones.funcionSala);
+//sillaReservada.hasMany(reserva);
+
 const snackReservada = poo.define('snack_reserva',{
     fk_reserva: {
         type: sq.INTEGER,
@@ -91,6 +97,9 @@ const snackReservada = poo.define('snack_reserva',{
     freezeTableName: true,
     tableName: 'snack_reserva'
 });
+
+//snackReservada.hasMany(Snack.snack);
+//snackReservada.hasMany(reserva);
 
 module.exports.reserva = reserva;
 module.exports.sillaReservada = sillaReservada;

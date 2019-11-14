@@ -48,8 +48,9 @@ const empleado = poo.define('empleado',{
     freezeTableName: true,
     tableName: 'empleado',
     modelName: 'empleado'
-}
-);
+});
+
+contrato.hasMany(empleado,{foreignKey:'fk_numcontrato',sourceKey:'id'});
 
 const empleadoMultiplex = poo.define('empleado_multiplex',{
     id:{
@@ -80,6 +81,9 @@ const empleadoMultiplex = poo.define('empleado_multiplex',{
     tableName: 'empleado_multiplex',
     modelName: 'empleado_multiplex'
 });
+
+empleado.hasMany(empleadoMultiplex,{foreignKey: 'fk_empleado', sourceKey: 'fk_persona'});
+Multiplex.multiplex.hasMany(empleadoMultiplex,{foreignKey: 'fk_multiplex', sourceKey: 'id'});
 
 module.exports.empleado = empleado;
 module.exports.contrato = contrato;

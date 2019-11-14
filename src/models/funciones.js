@@ -84,6 +84,11 @@ const funcionSala = poo.define('funcion_sala',{
     tableName: 'funcion_sala'
 });
 
+funcion.hasMany(funcionSala,{as:'functionS',foreignKey: 'fk_funcion'});
+Multiplex.sala.hasMany(funcionSala,{foreignKey: 'fk_sala', sourceKey: 'id'});
+//funcionSala.belongsTo(Multiplex.sala);
+pelicula.hasMany(funcion,{foreignKey: 'fk_pelicula', sourceKey: 'id'})
+
 module.exports.funcion = funcion;
 module.exports.pelicula = pelicula;
 module.exports.funcionSala = funcionSala;
