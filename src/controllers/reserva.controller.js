@@ -1,7 +1,6 @@
+const sq = require('sequelize');
 const poo = require('../database');
 const Reserva = require('../models/reserva');
-const Multiplex = require('../models/multiplex');
-const Funciones = require('../models/funciones');
 
 async function disponibilidadSillas(req,res){
     const {
@@ -11,10 +10,87 @@ async function disponibilidadSillas(req,res){
     let reserva = null;
     let reservadas = null;
     let proceso = null;
-    let 
+    let disponible = null;
     try {
-        const s = await poo.query("SELECT silla.id,silla.pk_numero,silla.v_tipo FROM silla,silla_reservada,funcion_sala,sala WHERE silla.id = silla_reservada.fk_silla AND silla.fk_sala = sala.id AND funcion_sala.fk_sala = sala.id AND funcion_sala.fk_funcion = 1 AND funcion_sala.fk_sala = 1")
-        .then(rows =>{});
+        //Reservadas
+        await poo.query("\
+        SELECT silla.id,silla.pk_numero,silla.v_tipo \
+        FROM silla,silla_reservada,funcion_sala,sala \
+        WHERE silla.id = silla_reservada.fk_silla \
+        AND silla.fk_sala = sala.id \
+        AND funcion_sala.fk_sala = sala.id \
+        AND funcion_sala.fk_funcion = :funcion \
+        AND funcion_sala.fk_sala = :sala \
+        AND silla_reservada.v_estado = 'en reserva'",
+        {
+            replacements:{
+                sala: pk_sala,
+                funcion: pk_funcion
+            }, 
+            type:sq.QueryTypes.SELECT
+        })
+        .then(rows =>{
+            reservadas=rows;
+        });
+        //Proceso
+        await poo.query("\
+        SELECT silla.id,silla.pk_numero,silla.v_tipo \
+        FROM silla,silla_reservada,funcion_sala,sala \
+        WHERE silla.id = silla_reservada.fk_silla \
+        AND silla.fk_sala = sala.id \
+        AND funcion_sala.fk_sala = sala.id \
+        AND funcion_sala.fk_funcion = :funcion\
+        AND funcion_sala.fk_sala = :sala \
+        AND silla_reservada.v_estado = 'en proceso'\
+        ",
+        {
+            replacements:{
+                sala: pk_sala,
+                funcion: pk_funcion
+            },
+            type: sq.QueryTypes.SELECT
+        }).then(rows =>{
+            proceso = rows;
+        });
+        //Disponibles
+        await poo.query("\
+            SELECT * FROM ( \
+                SELECT silla.id as id,silla.pk_numero,silla.v_tipo \
+                FROM silla,funcion_sala,sala \
+                WHERE silla.fk_sala = sala.id \
+                AND funcion_sala.fk_sala = sala.id \
+                AND funcion_sala.fk_funcion = :funcion\
+                AND funcion_sala.fk_sala = :sala \
+                EXCEPT \
+                    SELECT silla.id,silla.pk_numero,silla.v_tipo \
+                    FROM silla,silla_reservada,funcion_sala,sala \
+                    WHERE silla.id = silla_reservada.fk_silla \
+                    AND silla.fk_sala = sala.id \
+                    AND funcion_sala.fk_sala = sala.id \
+                    AND funcion_sala.fk_funcion = :funcion\
+                    AND funcion_sala.fk_sala = :sala \
+                    AND silla_reservada.v_estado = 'en reserva'\
+                EXCEPT\
+                    SELECT silla.id,silla.pk_numero,silla.v_tipo \
+                    FROM silla,silla_reservada,funcion_sala,sala \
+                    WHERE silla.id = silla_reservada.fk_silla \
+                    AND silla.fk_sala = sala.id \
+                    AND funcion_sala.fk_sala = sala.id \
+                    AND funcion_sala.fk_funcion = :funcion\
+                    AND funcion_sala.fk_sala = :sala \
+                    AND silla_reservada.v_estado = 'en proceso'\
+            ) u\
+            order by u.id\
+        ",
+        {
+            replacements:{
+                sala: pk_sala,
+                funcion: pk_funcion
+            },
+            type: sq.QueryTypes.SELECT
+        }).then(rows => {
+            disponible = rows;
+        })
         const ultima_reserva_usuario = await Reserva.reserva.findOne({
             where: {
                 fk_persona: req.pk_cedula['pk_cedula']
@@ -50,7 +126,10 @@ async function disponibilidadSillas(req,res){
         }
         return res.json({
             data: [
-                reserva
+                reserva,
+                reservadas,
+                proceso,
+                disponible
             ]
         });
     } catch (error) {
@@ -231,7 +310,7 @@ async function reservar_snack(req,res) {
             data: error
         });
     }
-}
+};
 
 module.exports.crear_reserva = crear_reserva;
 module.exports.reservar_silla = reservar_silla;

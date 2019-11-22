@@ -41,7 +41,7 @@ const sillaReservada = poo.define('silla_reservada',{
     },
     v_estado: {
         type: sq.STRING(50),
-        values: ['enproceso','En proceso','reservada', 'Reservada']
+        values: ['en proceso','En proceso','reservada', 'Reservada','cancelada']
     },
     fk_silla: {
         type: sq.INTEGER,
