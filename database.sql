@@ -135,7 +135,9 @@ CREATE TABLE Funcion
 	d_proyeccion date NOT NULL,
 	fk_pelicula integer NOT NULL,
 	t_inicioProyeccion time without time zone NOT NULL,
-	t_finProyeccion time without time zone NOT NULL
+	t_finProyeccion time without time zone NOT NULL,
+	-- UPDATE 
+	v_tipo_funcion varchar2(100) NOT NULL
 )
 ;
 
@@ -175,23 +177,44 @@ CREATE TABLE Pelicula
 (
 	id integer NOT NULL   DEFAULT NEXTVAL(('"pelicula_id_seq"'::text)::regclass),
 	v_nombre varchar(150) NOT NULL,
+	-- UPDATE
+	v_genero varchar2(150) NOT NULL,
+	v_clasificacion varchar2(50) NOT NULL,
+	v_reparto varchar2(500) NOT NULL,
+	v_director varchar2(100) NOT NULL,
+	d_fecha_estreno date NOT NULL,
+	v_pais_origen varchar2(100) NOT NULL
+	--- 
 	i_duracion integer NOT NULL,
 	tx_sinapsis text NOT NULL,
 	v_foto varchar(150) NOT NULL
 )
 ;
+-- crear la llave primaria 
+CREATE TABLE Tipo_documento(
+	pk_id number NOT NULL 	DEFAULT NEXTVAL(("tipo_documento_id_seq"::text)::regclass),
+	v_nombre varchar2(50) NOT NULL
+);
 
+-- crear la llave primaria
 CREATE TABLE Persona
 (
-	pk_cedula integer NOT NULL,
-	v_primerNombre varchar(100) NOT NULL,
-	v_segundoNombre varchar(100) NULL,
-	v_primerApellido varchar(100) NOT NULL,
-	v_segundoApellido varchar(100) NOT NULL,
-	i_telefono integer NOT NULL,
-	v_direccion varchar(100) NOT NULL
+	pk_numero_documento integer NOT NULL, -- Numero documento
+	-- Tipo documento                        Primary key (numero, tipo)
+	fk_tipo_documento number NOT NULL,
+	v_primerNombre varchar2(100) NOT NULL,
+	v_segundoNombre varchar2(100) NULL,
+	v_primerApellido varchar2(100) NOT NULL,
+	v_segundoApellido varchar2(100) NOT NULL,
+	i_telefono number NOT NULL,
+	v_direccion varchar2(100) NOT NULL
+	v_pass varchar2(128) NOT NULL
+	-- correo electronico
+	v_correo_electronico varchar2(200)
+	v_foto varchar(150) NOT NULL
 )
 ;
+--Tipo documento 
 
 CREATE TABLE Reserva
 (
@@ -483,6 +506,9 @@ CREATE SEQUENCE pelicula_id_seq INCREMENT 1 START 1
 ;
 
 CREATE SEQUENCE reserva_id_seq INCREMENT 1 START 1
+;
+
+CREATE SEQUENCE tipo_documento_id_seq INCREMENT 1 START 1
 ;
 
 CREATE SEQUENCE sala_id_seq INCREMENT 1 START 1

@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const app = express();
 
 //settings
-app.set('port', process.env.PORT || 3000);
+app.set('port', 8888 || process.env.PORT );
 //middlewares
 app.use(morgan('dev'));
 app.use(express.json());
