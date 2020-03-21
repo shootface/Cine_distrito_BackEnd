@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const app = express();
 
 //settings
-app.set('port', 8888 || process.env.PORT );
+app.set('port', 3000 || process.env.PORT );
 //middlewares
 app.use(morgan('dev'));
 app.use(express.json());
@@ -17,6 +17,7 @@ app.use(function(req, res, next) {
 // routes
 app.use(require('./routes/index'));
 app.use('/empleados',require('./routes/empleados'));
+app.use('/cliente',require('./routes/cliente'));
 app.use('/contratos',require('./routes/contratos'));
 app.use('/empleMulti',require('./routes/empleMulti'));
 app.use('/personas',require('./routes/personas'));

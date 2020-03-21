@@ -2,8 +2,22 @@ const sq = require('sequelize');
 const poo = require('../database');
 const Empleado = require('./empleado');
 
+const tipo_documento = poo.define('tipo_documento',{
+    pk_id_tipo:{
+        type: sq.INTEGER,
+        primaryKey: true,
+    },
+    v_tipo:{
+        type: sq.STRING(50)
+    }
+}, {
+    timestamps: false,
+    freezeTableName: true,
+    tableName: 'tipo_documento'
+});
+
 const persona = poo.define('persona',{
-    pk_cedula:{
+    pk_numero_identificacion:{
         type: sq.INTEGER,
         primaryKey: true
     },
@@ -25,9 +39,23 @@ const persona = poo.define('persona',{
     v_direccion:{
         type: sq.STRING(100)
     },
-    pass:{
+    v_pass:{
         type: sq.STRING(128),
         allowNull: false
+    },
+    fk_tipo_documento:{
+        type: sq.INTEGER,
+        allowNull: false,
+        references:{
+            model: tipo_documento,
+            key:'pk_id_tipo'
+        }
+    },
+    v_correo_electronico:{
+        type: sq.STRING(100)
+    },
+    v_foto:{
+        type: sq.STRING(100)
     }
 },{
     timestamps: false,
@@ -35,8 +63,6 @@ const persona = poo.define('persona',{
     tableName: 'persona'
 }
 );
-
-//persona.hasMany(Empleado.empleado,{foreignKey:'fk_persona',sourceKey:'pk_cedula'})
 
 const cliente = poo.define('cliente',{
     fk_persona:{
@@ -62,7 +88,6 @@ const cliente = poo.define('cliente',{
     tableName: 'cliente'
 });
 
-//persona.hasMany(cliente,{foreignKey:'fk_persona',sourceKey:'pk_cedula'});
-
 module.exports.persona = persona;
 module.exports.cliente = cliente;
+module.exports.tipo_documento = tipo_documento;

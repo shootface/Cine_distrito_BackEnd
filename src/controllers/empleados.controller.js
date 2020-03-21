@@ -50,13 +50,16 @@ function crear_empleado(req,res){
             v_segundoapellido,
             i_telefono,
             v_direccion,
-            pass,
+            v_pass,
+            fk_tipo_documento,
+            v_correo_electronico,
+            v_foto,
             n_descuento,
             fk_numcontrato
             } = req.body;
             //Hash password
             const salt = await bs.genSalt(10);
-            const hashPass = await bs.hash(pass,salt);
+            const hashPass = await bs.hash(v_pass,salt);
             return newEp = await Persona.persona.create({
                 pk_cedula,
                 v_primernombre,
@@ -65,7 +68,10 @@ function crear_empleado(req,res){
                 v_segundoapellido,
                 i_telefono,
                 v_direccion,
-                pass : hashPass
+                v_pass : hashPass,
+                fk_tipo_documento,
+                v_correo_electronico,
+                v_foto
             },{transaction: t}).then(async(newEp) => {
                 return newEm = await Empleado.empleado.create({
                     fk_persona:newEp.pk_cedula,

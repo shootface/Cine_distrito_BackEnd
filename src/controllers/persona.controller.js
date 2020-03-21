@@ -18,4 +18,6 @@ async function getPersonas(req,res){
     }
 };
 
+//async function 
+
 module.exports.getPersonas = getPersonas;
