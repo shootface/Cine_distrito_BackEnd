@@ -19,6 +19,24 @@ const pelicula = poo.define('pelicula',{
     },
     v_foto: {
         type: sq.STRING(100)
+    },
+    v_genero: {
+        type: sq.STRING(100)
+    },
+    v_clasificacion: {
+        type: sq.STRING(100)
+    },
+    v_reparto: {
+        type: sq.STRING(500)
+    },
+    v_director: {
+        type: sq.STRING(100)
+    },
+    d_fecha_estreno : {
+        type: sq.DATE
+    },
+    v_pais_origen : {
+        type: sq.STRING(100)
     }
 },{
     timestamps: false,

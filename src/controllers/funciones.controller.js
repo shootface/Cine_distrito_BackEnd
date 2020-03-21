@@ -124,7 +124,6 @@ async function get_funcion_pelicula(req,res){
     }
 }
 
-
 module.exports.getFunciones = getFunciones;
 module.exports.getOneFuncion = getOneFuncion;
 module.exports.get_funcion_pelicula = get_funcion_pelicula;
