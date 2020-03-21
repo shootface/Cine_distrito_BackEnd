@@ -7,7 +7,7 @@ const Persona = require('../models/persona');
 function crear_cliente(req,res){
     const e = poo.transaction( async(t) =>{
         const {
-            pk_cedula,
+            pk_numero_identificacion,
             v_primernombre,
             v_segundonombre,
             v_primerapellido,
@@ -23,7 +23,7 @@ function crear_cliente(req,res){
             const salt = await bs.genSalt(10);
             const hashPass = await bs.hash(v_pass,salt);
             return newEp = await Persona.persona.create({
-                pk_cedula,
+                pk_numero_identificacion,
                 v_primernombre,
                 v_segundonombre,
                 v_primerapellido,
@@ -36,7 +36,7 @@ function crear_cliente(req,res){
                 v_foto
             },{transaction: t}).then(async(newEp) => {
                 return newEm = await Persona.cliente.create({
-                    fk_persona:newEp.pk_cedula,
+                    fk_persona:newEp.pk_numero_identificacion,
                     i_numpuntos:0,
                     i_numtarjeta:0,
                     d_fechapuntos: ""
