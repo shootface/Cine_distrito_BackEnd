@@ -84,8 +84,49 @@ async function borrar_funcion(req,res){
         });
     }
 };
+async function get_funcion_pelicula(req,res){
+    const { 
+        id_funcion,
+        id_pelicula
+    } = req.body;
+    let funciones = null;
+    try {
+        await poo.query("\
+        select multiplex.v_nombre,funcion.v_estado,funcion.t_inicioproyeccion,funcion.v_tipo_proyeccion\
+        from sala,funcion,funcion_sala,multiplex,pelicula\
+        where sala.id = multiplex.id\
+        and funcion_sala.fk_funcion = :funcion\
+        and funcion_sala.fk_sala = sala.id\
+        and funcion.fk_pelicula = :pelicula\
+        order by multiplex.v_nombre\
+        ",
+        {
+            replacements:{
+                funcion: id_funcion,
+                pelicula: id_pelicula
+            },
+            type:sq.QueryTypes.SELECT
+        })
+        .then(rows => {
+            funciones = rows
+        });
+        return res.json({
+            data: [
+                funciones
+            ]
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in get_funcion_pelicula',
+            data: error
+        });
+    }
+}
+
 
 module.exports.getFunciones = getFunciones;
 module.exports.getOneFuncion = getOneFuncion;
+module.exports.get_funcion_pelicula = get_funcion_pelicula;
 module.exports.crear_funcion = crear_funcion;
 module.exports.borrar_funcion = borrar_funcion;
