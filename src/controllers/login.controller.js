@@ -7,7 +7,7 @@ const config = require('../config');
 async function login(req,res){
     const {
         pk_numero_identificacion,
-        pass
+        v_pass
     } = req.body;
     try {
         const user = await Persona.persona.findOne({
@@ -15,7 +15,7 @@ async function login(req,res){
                 pk_numero_identificacion
             }
         });
-        const validPass = await bs.compare(pass,user.v_pass)
+        const validPass = await bs.compare(v_pass,user.v_pass)
         if (validPass){
             const token = jwt.sign({pk_numero_identificacion: pk_numero_identificacion},config.token_secret);
             res.header('auth-token',token).json({
