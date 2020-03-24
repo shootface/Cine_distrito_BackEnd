@@ -6,18 +6,18 @@ const config = require('../config');
 
 async function login(req,res){
     const {
-        pk_cedula,
-        pass
+        pk_numero_identificacion,
+        v_pass
     } = req.body;
     try {
         const user = await Persona.persona.findOne({
             where:{
-                pk_cedula
+                pk_numero_identificacion
             }
         });
-        const validPass = await bs.compare(pass,user.pass)
+        const validPass = await bs.compare(v_pass,user.v_pass)
         if (validPass){
-            const token = jwt.sign({pk_cedula: pk_cedula},config.token_secret);
+            const token = jwt.sign({pk_numero_identificacion: pk_numero_identificacion},config.token_secret);
             res.header('auth-token',token).json({
                 message: 'logged'
             });
