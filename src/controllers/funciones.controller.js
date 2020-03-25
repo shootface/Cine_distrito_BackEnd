@@ -86,7 +86,7 @@ async function borrar_funcion(req,res){
 };
 async function get_funcion_pelicula(req,res){
     const { 
-        id_funcion,
+        fecha,
         id_pelicula
     } = req.body;
     let funciones = null;
@@ -95,14 +95,15 @@ async function get_funcion_pelicula(req,res){
         select multiplex.v_nombre,funcion.v_estado,funcion.t_inicioproyeccion,funcion.v_tipo_proyeccion\
         from sala,funcion,funcion_sala,multiplex,pelicula\
         where sala.id = multiplex.id\
-        and funcion_sala.fk_funcion = :funcion\
+        and funcion_sala.fk_funcion = funcion.id\
         and funcion_sala.fk_sala = sala.id\
         and funcion.fk_pelicula = :pelicula\
+        and funcion.d_proyeccion = :fecha\
         order by multiplex.v_nombre\
         ",
         {
             replacements:{
-                funcion: id_funcion,
+                fecha: fecha,
                 pelicula: id_pelicula
             },
             type:sq.QueryTypes.SELECT
