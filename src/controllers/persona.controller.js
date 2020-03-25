@@ -17,26 +17,27 @@ async function getPersonas(req,res){
         });
     }
 };
+
 async function getOnePersona(req,res){
-    const { id } = req.params;
+    const { pk_numero_identificacion } = req.params;
     try {
-        const pe = await Persona.persona.findOne({
+        const pr = await Persona.persona.findOne({
             where: {
-                pk_numero_identificacion: id
+                pk_numero_identificacion
             }
         });
         res.json({
-            data: pe
+            data: pr
         })
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'Something goes wrong in getOneEmpleado',
+            message: 'Something goes wrong in getOnePersona',
             data: error
         });
     }
 };
-//async function 
 
-module.exports.getPersonas = getPersonas;
+//async function 
 module.exports.getOnePersona = getOnePersona;
+module.exports.getPersonas = getPersonas;

@@ -55,7 +55,7 @@ const persona = poo.define('persona',{
         type: sq.STRING(100)
     },
     v_foto:{
-        type: sq.STRING(100)
+        type: sq.TEXT
     }
 },{
     timestamps: false,

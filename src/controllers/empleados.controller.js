@@ -19,6 +19,7 @@ async function getEmpleados(req,res){
         });
     }
 };
+
 async function getOneEmpleado(req,res){
     const { fk_persona } = req.params;
     try {

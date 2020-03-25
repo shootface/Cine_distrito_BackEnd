@@ -57,4 +57,25 @@ function crear_cliente(req,res){
     });
 };
 
+async function getOneCliente(req,res){
+    const { fk_persona } = req.params;
+    try {
+        const em = await Persona.cliente.findOne({
+            where: {
+                fk_persona
+            }
+        });
+        res.json({
+            data: em
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in getOneCliente',
+            data: error
+        });
+    }
+};
+
 module.exports.crear_cliente = crear_cliente;
+module.exports.getOneCliente = getOneCliente;

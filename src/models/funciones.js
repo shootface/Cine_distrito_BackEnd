@@ -18,7 +18,7 @@ const pelicula = poo.define('pelicula',{
         type: sq.TEXT
     },
     v_foto: {
-        type: sq.STRING(100)
+        type: sq.TEXT
     },
     v_genero: {
         type: sq.STRING(100)
