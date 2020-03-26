@@ -88,7 +88,7 @@ async function get_funcion_pelicula(req,res){
     const { 
         fechaP,
         id_pelicula
-    } = req.body;
+    } = req.params;
     let funciones = null;
     try {
         await poo.query("\
