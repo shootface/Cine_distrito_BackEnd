@@ -86,7 +86,7 @@ async function borrar_funcion(req,res){
 };
 async function get_funcion_pelicula(req,res){
     const { 
-        fecha,
+        fechaP,
         id_pelicula
     } = req.body;
     let funciones = null;
@@ -103,8 +103,8 @@ async function get_funcion_pelicula(req,res){
         ",
         {
             replacements:{
-                fecha: fecha,
-                pelicula: id_pelicula
+                pelicula: id_pelicula,
+                fecha: fechaP
             },
             type:sq.QueryTypes.SELECT
         })
