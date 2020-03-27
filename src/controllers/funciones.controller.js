@@ -93,15 +93,15 @@ async function get_funcion_pelicula(req,res){
     let funciones = null;
     try {
         await poo.query("\
-        select multiplex.v_nombre,funcion.v_estado,funcion.t_inicioproyeccion,funcion.v_tipo_proyeccion\
-        from sala,funcion,funcion_sala,multiplex,pelicula\
-        where sala.id = multiplex.id\
-        and funcion_sala.fk_funcion = funcion.id\
+        select multiplex.v_nombre,funcion_sala.fk_funcion,funcion_sala.fk_sala,funcion.t_inicioproyeccion, funcion.t_finproyeccion, funcion.v_estado, funcion.v_tipo_proyeccion\
+        from funcion_sala,funcion,sala,multiplex,pelicula\
+        where funcion_sala.fk_funcion = funcion.id\
         and funcion_sala.fk_sala = sala.id\
+        and sala.fk_multiplex = multiplex.id\
         and funcion.fk_pelicula = pelicula.id\
-        and pelicula.id = :pelicula\
         and funcion.d_proyeccion = :fecha\
-        order by multiplex.v_nombre\
+        and pelicula.id = :pelicula\
+        order by multiplex.v_nombre,funcion_sala.id\
         ",
         {
             replacements:{
