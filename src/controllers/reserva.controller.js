@@ -6,7 +6,10 @@ async function disponibilidadSillas(req,res){
     const {
         pk_sala,
         pk_funcion
-    } = req.body;
+    } = req.params;
+    console.log(pk_sala)
+    console.log(pk_funcion)
+    console.log(req.headers.authtoken)
     let reserva = null;
     let reservadas = null;
     let proceso = null;

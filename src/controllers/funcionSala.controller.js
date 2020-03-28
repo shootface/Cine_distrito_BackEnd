@@ -16,11 +16,11 @@ async function getFuncionSala(req,res){
 };
 
 async function getOneFuncionSala(req,res){
-    const { id } = req.params;
+    const { fk_funcion } = req.params;
     try {
         const fun = await Funciones.funcionSala.findOne({
             where:{
-                id
+                fk_funcion
             }
         });
         res.json({

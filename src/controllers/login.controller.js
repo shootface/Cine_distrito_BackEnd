@@ -18,12 +18,13 @@ async function login(req,res){
         const validPass = await bs.compare(v_pass,user.v_pass)
         if (validPass){
             const token = jwt.sign({pk_numero_identificacion: pk_numero_identificacion},config.token_secret);
-            res.header('auth-token',token).json({
-                message: 'logged'
+            res.status(200).json({
+                message: 'logged',
+                auth:token
             });
         }else{
             res.status(500).json({
-                message: 'pass incorrect',
+                message: 'pass incorrect'
             });
         }
     } catch (error) {
