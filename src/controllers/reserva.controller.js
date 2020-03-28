@@ -10,6 +10,7 @@ async function disponibilidadSillas(req,res){
     console.log(pk_sala)
     console.log(pk_funcion)
     console.log(req.headers.authtoken)
+    console.log(req.header('authtoken'))
     let reserva = null;
     let reservadas = null;
     let proceso = null;
@@ -96,7 +97,7 @@ async function disponibilidadSillas(req,res){
         })
         const ultima_reserva_usuario = await Reserva.reserva.findOne({
             where: {
-                fk_persona: req.pk_cedula['pk_cedula']
+                fk_persona: req.pk_numero_identificacion['pk_numero_identificacion']
             },
             order: [
                 ['t_inicioreserva', 'DESC']
@@ -123,7 +124,7 @@ async function disponibilidadSillas(req,res){
             let newReserva = await Reserva.reserva.create({
                 v_estado: 'en proceso',
                 t_inicioreserva: date,
-                fk_persona: req.pk_cedula['pk_cedula']
+                fk_persona: req.pk_numero_identificacion['pk_numero_identificacion']
             });
             reserva = newReserva;
         }
@@ -151,7 +152,7 @@ async function crear_reserva(req, res) {
         const newReserva = await Reserva.reserva.create({
             v_estado: 'en proceso',
             t_inicioreserva: date,
-            fk_persona: req.pk_cedula['pk_cedula']
+            fk_persona: req.pk_numero_identificacion['pk_numero_identificacion']
         });
         res.json({
             data: newReserva
@@ -181,7 +182,7 @@ async function reservar_silla(req, res) {
             console.log(reserva);
             const ultima_reserva_usuario = await Reserva.reserva.findOne({
                 where: {
-                    fk_persona: req.pk_cedula['pk_cedula']
+                    fk_persona: req.pk_numero_identificacion['pk_numero_identificacion']
                 },
                 order: [
                     ['t_inicioreserva', 'DESC']
@@ -202,7 +203,7 @@ async function reservar_silla(req, res) {
                     }
                 });
                 if (silla_reservada) {
-                    if (req.pk_cedula['pk_cedula'] == reserva.fk_persona) {
+                    if (req.pk_numero_identificacion['pk_numero_identificacion'] == reserva.fk_persona) {
                         silla_reservada.destroy()
                         return res.json({
                             message: 'liberada'
@@ -257,7 +258,7 @@ async function reservar_snack(req,res) {
             console.log(reserva);
             const ultima_reserva_usuario = await Reserva.reserva.findOne({
                 where: {
-                    fk_persona: req.pk_cedula['pk_cedula']
+                    fk_persona: req.pk_numero_identificacion['pk_numero_identificacion']
                 },
                 order: [
                     ['t_inicioreserva', 'DESC']
@@ -277,7 +278,7 @@ async function reservar_snack(req,res) {
                     }
                 });
                 if(snack_reservado){
-                    if (req.pk_cedula['pk_cedula'] == reserva.fk_persona) {
+                    if (req.pk_numero_identificacion['pk_numero_identificacion'] == reserva.fk_persona) {
                         snack_reservado.destroy()
                         return res.json({
                             message: 'liberada'
