@@ -5,7 +5,8 @@ const Reserva = require('../models/reserva');
 async function disponibilidadSillas(req,res){
     const {
         pk_sala,
-        pk_funcion
+        pk_funcion,
+        pk_numero_identificacion
     } = req.params;
     console.log(pk_sala)
     console.log(pk_funcion)
@@ -97,34 +98,47 @@ async function disponibilidadSillas(req,res){
         })
         const ultima_reserva_usuario = await Reserva.reserva.findOne({
             where: {
-                fk_persona: req.pk_numero_identificacion['pk_numero_identificacion']
+                fk_persona: pk_numero_identificacion
             },
             order: [
                 ['t_inicioreserva', 'DESC']
             ]
         });
-        console.log(ultima_reserva_usuario.t_inicioreserva.toUTCString());
-        let minutes = ultima_reserva_usuario.t_inicioreserva.getMinutes();
-        ultima_reserva_usuario.t_inicioreserva.setMinutes(minutes + 5);
-        const tiempo_limite = ultima_reserva_usuario.t_inicioreserva;
-        console.log(tiempo_limite.toUTCString());
-        console.log(new Date(Date.now()).toUTCString());
-        if (tiempo_limite > Date.now().valueOf()) {
-            reserva = ultima_reserva_usuario;
-        }else{
-            if (ultima_reserva_usuario.v_estado == 'en proceso' || ultima_reserva_usuario.v_estado == 'En proceso'){
-                await ultima_reserva_usuario.update({
-                    v_estado: 'cancelada',
-                    t_inicioreserva: ultima_reserva_usuario.t_inicioreserva,
-                    fk_persona: ultima_reserva_usuario.fk_persona
-                });
+        if(ultima_reserva_usuario!== null){
+            console.log(ultima_reserva_usuario.t_inicioreserva.toUTCString());
+            let minutes = ultima_reserva_usuario.t_inicioreserva.getMinutes();
+            ultima_reserva_usuario.t_inicioreserva.setMinutes(minutes + 5);
+            const tiempo_limite = ultima_reserva_usuario.t_inicioreserva;
+            console.log(tiempo_limite.toUTCString());
+            console.log(new Date(Date.now()).toUTCString());
+            if (tiempo_limite > Date.now().valueOf()) {
+                reserva = ultima_reserva_usuario;
             }
+            else{
+                if (ultima_reserva_usuario.v_estado == 'en proceso' || ultima_reserva_usuario.v_estado == 'En proceso'){
+                    await ultima_reserva_usuario.update({
+                        v_estado: 'cancelada',
+                        t_inicioreserva: ultima_reserva_usuario.t_inicioreserva,
+                        fk_persona: ultima_reserva_usuario.fk_persona
+                    });
+                }
+                let date = new Date();
+                console.log(date + '  ' + date.toLocaleString())
+                let newReserva = await Reserva.reserva.create({
+                    v_estado: 'en proceso',
+                    t_inicioreserva: date,
+                    fk_persona: pk_numero_identificacion
+                });
+                reserva = newReserva;
+            }
+        }
+        else{
             let date = new Date();
             console.log(date + '  ' + date.toLocaleString())
             let newReserva = await Reserva.reserva.create({
                 v_estado: 'en proceso',
                 t_inicioreserva: date,
-                fk_persona: req.pk_numero_identificacion['pk_numero_identificacion']
+                fk_persona: pk_numero_identificacion
             });
             reserva = newReserva;
         }
@@ -170,8 +184,13 @@ async function reservar_silla(req, res) {
     const {
         fk_silla,
         fk_funcion_sala,
-        fk_reserva
+        fk_reserva,
+        pk_numero_identificacion
     } = req.body;
+    console.log(fk_silla)
+    console.log(fk_funcion_sala)
+    console.log(fk_reserva)
+    console.log(pk_numero_identificacion)
     try {
         const reserva = await Reserva.reserva.findOne({
             where: {
@@ -182,7 +201,7 @@ async function reservar_silla(req, res) {
             console.log(reserva);
             const ultima_reserva_usuario = await Reserva.reserva.findOne({
                 where: {
-                    fk_persona: req.pk_numero_identificacion['pk_numero_identificacion']
+                    fk_persona: pk_numero_identificacion
                 },
                 order: [
                     ['t_inicioreserva', 'DESC']
@@ -203,7 +222,7 @@ async function reservar_silla(req, res) {
                     }
                 });
                 if (silla_reservada) {
-                    if (req.pk_numero_identificacion['pk_numero_identificacion'] == reserva.fk_persona) {
+                    if (pk_numero_identificacion == reserva.fk_persona) {
                         silla_reservada.destroy()
                         return res.json({
                             message: 'liberada'
