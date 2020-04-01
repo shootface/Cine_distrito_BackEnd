@@ -70,14 +70,7 @@ async function crear_snack(req,res){
 
 async function actualizar_snack(req,res){
     const {
-        id
-    } = req.params;
-    const {
-        v_tipo,
-        v_nombre,
-        tx_descripcion,
-        i_precio,
-        i_puntosofrecidos,
+        id,
         i_cantidad
     } = req.body;
     try {
@@ -87,15 +80,10 @@ async function actualizar_snack(req,res){
             }
         });
         const updateS = await snack.update({
-            v_tipo,
-            v_nombre,
-            tx_descripcion,
-            i_precio,
-            i_puntosofrecidos,
-            i_cantidad
+            i_cantidad: snack.i_cantidad - i_cantidad
         });
         return res.json({
-            message: 'Update Successfully',
+            message: 'confirmado',
             data: updateS
         });
     } catch (error) {

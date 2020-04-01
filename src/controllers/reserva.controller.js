@@ -180,6 +180,97 @@ async function crear_reserva(req, res) {
     }
 };
 
+async function confirmar_reserva(req, res){
+    const {
+        fk_reserva,
+        pk_numero_identificacion
+    } = req.body;
+    try{
+        const reserva = await Reserva.reserva.findOne({
+            where: {
+                id: fk_reserva
+            }
+        });
+        if (reserva) {
+            console.log(reserva);
+            const ultima_reserva_usuario = await Reserva.reserva.findOne({
+                where: {
+                    fk_persona: pk_numero_identificacion
+                },
+                order: [
+                    ['t_inicioreserva', 'DESC']
+                ]
+            });
+            let minutes = ultima_reserva_usuario.t_inicioreserva.getMinutes();
+            ultima_reserva_usuario.t_inicioreserva.setMinutes(minutes + 5);
+            const tiempo_limite = ultima_reserva_usuario.t_inicioreserva;
+            if (tiempo_limite > Date.now().valueOf()) {
+                await ultima_reserva_usuario.update({
+                    v_estado: 'en reserva'
+                });
+                return res.json({
+                    message: 'confirmado'
+                })
+            }
+            else {
+                await ultima_reserva_usuario.update({
+                    v_estado: 'cancelada'
+                });
+                return res.json({
+                    message: 'El tiempo para terminar la reserva ha finalizado'
+                })
+            }
+        }
+        else{
+            return res.status(400).json({
+                message: 'reserva not found'
+            })
+        }
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in reservar_silla',
+            data: error
+        });
+    }
+}
+
+async function confirmar_silla_reserva(req, res){
+    const {
+        fk_silla,
+        fk_reserva,
+    } = req.body;
+    try{
+        let silla_reservada = await Reserva.sillaReservada.findOne({
+            where: {
+                fk_silla,
+                fk_reserva
+            }
+        });
+        if (silla_reservada) {
+            await silla_reservada.update({
+                v_estado: 'en reserva'
+            });
+            return res.json({
+                message: 'confirmado'
+            })
+        }
+        else{
+            return res.status(400).json({
+                message: 'silla reserva not found'
+            })
+        }
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something goes wrong in reservar_silla',
+            data: error
+        });
+    }
+}
+
 async function reservar_silla(req, res) {
     const {
         fk_silla,
@@ -335,6 +426,8 @@ async function reservar_snack(req,res) {
     }
 };
 
+module.exports.confirmar_silla_reserva = confirmar_silla_reserva
+module.exports.confirmar_reserva= confirmar_reserva;
 module.exports.crear_reserva = crear_reserva;
 module.exports.reservar_silla = reservar_silla;
 module.exports.reservar_snack = reservar_snack;
